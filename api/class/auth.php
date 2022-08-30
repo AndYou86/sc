@@ -55,16 +55,24 @@ class auth
     {
         if (array_key_exists('id', $data) && array_key_exists('token', $data)) {
             $request = new DB();
-            $check = $request->read('api_users', $data);
-            if ($check && $data['token'] == $check['token']) {
-                $upToken = [];
-                $upToken['id'] = (int)$data['id'];
+            $checkData = $data;
+            $upToken = [];
+            if ($checkData['token'] == false) {
+                unset($checkData['token']);
+                $upToken['id'] = (int)$checkData['id'];
                 $upToken['token'] = NULL;
-                if ($this->upToken($upToken)) {
-                    return ['error' => false, 'text' => 'user loguot'];
-                } else {
-                    return ['error' => true, 'text' => 'error db'];
+            } else {
+                $check = $request->read('api_users', $checkData);
+                if ($check && $data['token'] == $check['token']) {
+                    $upToken['id'] = (int)$data['id'];
+                    $upToken['token'] = NULL;
                 }
+            }
+
+            if ($this->upToken($upToken)) {
+                return ['error' => false, 'text' => 'user loguot'];
+            } else {
+                return ['error' => true, 'text' => 'error db'];
             }
         } else {
             return EMPTY_DATA;
@@ -85,7 +93,7 @@ class auth
             return EMPTY_DATA;
         }
     }
-    
+
     private function helperCheck(array $data)
     {
         if (array_key_exists('login', $data) && array_key_exists('password', $data)) {

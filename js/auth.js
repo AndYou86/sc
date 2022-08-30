@@ -15,7 +15,8 @@ class Auth {
     validateAuth(auth) {
         let self = this;
         if (!auth) {
-            window.location.replace("index.html");
+            self.logOut();
+
         } else {
             fetch('api/auth?' + new URLSearchParams({
                     token: auth,
