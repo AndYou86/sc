@@ -42,7 +42,8 @@ if ($uri[0] == 'auth') {
             header("Content-Type: application/json; charset=UTF-8");
             header("Access-Control-Allow-Methods: DELETE ");
             header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-            parse_str(file_get_contents('php://input'), $_DELETE);
+            $_DELETE = json_decode(file_get_contents('php://input'),true) ;
+            
             if (!empty($_DELETE['id']) && !empty($_DELETE['token'])) {
                 $key = ['id', 'token'];
                 $data = array_intersect_key($_DELETE, array_flip($key));
@@ -66,6 +67,16 @@ if ($uri[0] == 'auth') {
                 http_response_code(201);
                 echo json_encode($result);
             }
+            break;
+        case 'GET':
+            header("Access-Control-Allow-Origin: *");
+            header("Content-Type: application/json; charset=UTF-8");
+            header("Access-Control-Allow-Methods: GET ");
+            header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+                $result = $auth->check($_GET);
+                http_response_code(201);
+                echo json_encode($result);
+    
             break;
         default:
             http_response_code(400);

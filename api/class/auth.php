@@ -17,7 +17,7 @@ class auth
                 $upToken['id'] = (int)$check['id'];
                 $upToken['token'] = $token;
                 if ($this->upToken($upToken)) {
-                    return ['error' => false, 'token' => $token, 'id'=>(int)$check['id']];
+                    return ['error' => false, 'token' => $token, 'id' => (int)$check['id']];
                 } else {
                     return ['error' => true, 'text' => 'error db'];
                 }
@@ -56,22 +56,36 @@ class auth
         if (array_key_exists('id', $data) && array_key_exists('token', $data)) {
             $request = new DB();
             $check = $request->read('api_users', $data);
-            if($check && $data['token']==$check['token']){
+            if ($check && $data['token'] == $check['token']) {
                 $upToken = [];
                 $upToken['id'] = (int)$data['id'];
                 $upToken['token'] = NULL;
-                if($this->upToken($upToken)){
+                if ($this->upToken($upToken)) {
                     return ['error' => false, 'text' => 'user loguot'];
-                }else{
+                } else {
                     return ['error' => true, 'text' => 'error db'];
                 }
-
             }
         } else {
             return EMPTY_DATA;
         }
     }
 
+    public function check(array $data = [])
+    {
+        if (array_key_exists('id', $data) && array_key_exists('token', $data)) {
+            $request = new DB();
+            $check = $request->read('api_users', $data);
+            if ($check && $data['token'] == $check['token'] && $data['id'] == $check['id']) {
+                return ['error' => false];
+            } else {
+                return ['error' => true];
+            }
+        } else {
+            return EMPTY_DATA;
+        }
+    }
+    
     private function helperCheck(array $data)
     {
         if (array_key_exists('login', $data) && array_key_exists('password', $data)) {
@@ -83,7 +97,7 @@ class auth
 
     private function upToken(array $data = [])
     {
-        
+
         $request = new DB();
         return $request->update('api_users', $data);
     }

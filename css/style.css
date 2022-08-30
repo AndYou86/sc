@@ -197,3 +197,8 @@ span.clickPageNumber:last-child {
 .pageButton {
     cursor: pointer;
 }
+
+.button_next,
+.button_prev {
+    cursor: pointer;
+}
